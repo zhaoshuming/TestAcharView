@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="30dp"
+    android:layout_height="20dp"
+    android:background="@mipmap/sm_lable_bg_buy_c"
+    android:gravity="center_horizontal"
+    android:text="买入"
+    android:textColor="@android:color/white"
+    android:textSize="11sp" />

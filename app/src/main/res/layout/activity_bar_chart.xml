@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/lay_dayincome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:minHeight="45dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_dayincome_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="日收益"
+            android:textColor="#999"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_dayincome_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            android:gravity="right"
+            android:text="0.00"
+            android:textColor="#ff0000"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <com.howbuy.taoliang.testacharview.PiggyHomeSwipeForChart
+        android:id="@+id/wl"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:visibility="invisible" />
+
+    <com.howbuy.taoliang.testacharview.widget.mpchart.bar.HbBarChart
+        android:id="@+id/bar_chart"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="-20dp" />
+
+</LinearLayout>
