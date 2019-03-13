@@ -51,10 +51,10 @@ public class HbFundLineChartRenderer extends LineChartRenderer {
     private float rect= Utils.convertDpToPixel(8f);//矩形高低差/2
     private float textX= Utils.convertDpToPixel(2f);//文本x坐标偏移量
     private float textY= Utils.convertDpToPixel(3f);//文本y偏移量
-    private boolean isShowHLPoint = true;//是否显示最高点和最低点标识,默认显示
     private float textSixe = 10f;//文字大小
 
     private Context mContext;
+    private boolean isShowLabel = true;//是否显示label,默认显示
     private int mWidth;//屏幕宽度,在构造方法中传进来赋值
     private float hViewLength = Utils.convertDpToPixel(30f);//vie宽30dp
     private float vViewLength = Utils.convertDpToPixel(20f);//view高20dp
@@ -519,7 +519,7 @@ public class HbFundLineChartRenderer extends LineChartRenderer {
     @Override
     public void drawValues(Canvas c) {
         super.drawValues(c);
-        if (isShowHLPoint) {
+        if (isShowLabel) {
             LineDataSet dataSetByIndex = (LineDataSet) mChart.getLineData().getDataSetByIndex(0);
             Transformer trans = mChart.getTransformer(dataSetByIndex.getAxisDependency());
             Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);//抗锯齿画笔
@@ -528,53 +528,11 @@ public class HbFundLineChartRenderer extends LineChartRenderer {
             //画首中尾三个label
             float[] firstFloat = getFloat(dataSetByIndex.getValues(), 0);//根据数据集获取点
             drawPointLabel(trans, paint, c, firstFloat);
-            float[] middleFloat = getFloat(dataSetByIndex.getValues(), (dataSetByIndex.getValues().size() - 1) / 2);//根据数据集获取点
+            float[] middleFloat = getFloat(dataSetByIndex.getValues(), (dataSetByIndex.getValues().size() - 1) / 2);
             drawPointLabel(trans, paint, c, middleFloat);
-            float[] endFloat = getFloat(dataSetByIndex.getValues(), dataSetByIndex.getValues().size() - 1);//根据数据集获取点
+            float[] endFloat = getFloat(dataSetByIndex.getValues(), dataSetByIndex.getValues().size() - 1);
             drawPointLabel(trans, paint, c, endFloat);
-            //画低点标记
-//            drawLowPoint(dataSetByIndex, trans, paint, c);
         }
-    }
-
-    private void drawLowPoint(LineDataSet dataSetByIndex, Transformer trans, Paint paint, Canvas c) {
-        float[] minFloat = getMinFloat(dataSetByIndex.getValues());//根据数据集获取最低点
-        //通过trans得到最低点的屏幕位置
-        MPPointD minPoint = trans.getPixelForValues(minFloat[0], minFloat[1]);
-        float lowX = (float) minPoint.x;
-        float lowY = (float) minPoint.y;
-        paint.setColor(Color.parseColor("#1ab546"));
-        float rectLength = Utils.convertDpToPixel((minFloat[1] + "").length() * Utils.convertDpToPixel(1.7f));//矩形框长
-        //画横竖线
-        c.drawLine(lowX, lowY, lowX, lowY + vLength, paint);
-        if (lowX > mWidth - mWidth / 3) {//标识朝左
-            c.drawLine(lowX, lowY + vLength, lowX - hLength, lowY + vLength, paint);
-            //画矩形
-            c.drawRect(new Rect((int) (lowX - hLength - rectLength), (int) (lowY + vLength - rect), (int) (lowX - hLength), (int) (lowY + vLength + rect)), paint);
-            //写数字
-            paint.setColor(Color.WHITE);
-            c.drawText(minFloat[1] + "", lowX - rectLength - hLength + textX, lowY + vLength + textY, paint);
-        } else {//标识朝右
-            c.drawLine(lowX, lowY + vLength, lowX + hLength, lowY + vLength, paint);
-            c.drawRect(new Rect((int) (lowX + hLength), (int) (lowY + vLength - rect), (int) (lowX + hLength + rectLength), (int) (lowY + vLength + rect)), paint);
-            paint.setColor(Color.WHITE);
-            c.drawText(minFloat[1] + "", lowX + hLength + textX, lowY + vLength + textY, paint);
-        }
-    }
-
-    private float[] getMinFloat(List<Entry> lists) {
-        float[] mixEntry = new float[2];
-        for (int i = 0; i < lists.size() - 1; i++) {
-            if (i == 0) {
-                mixEntry[0] = lists.get(i).getX();
-                mixEntry[1] = lists.get(i).getY();
-            }
-            if (mixEntry[1] > lists.get(i + 1).getY()) {
-                mixEntry[0] = lists.get(i + 1).getX();
-                mixEntry[1] = lists.get(i + 1).getY();
-            }
-        }
-        return mixEntry;
     }
 
     private void drawPointLabel(Transformer trans, Paint paint, Canvas c, float[] floatPosition) {
@@ -615,5 +573,45 @@ public class HbFundLineChartRenderer extends LineChartRenderer {
         Canvas c = new Canvas(bmp);
         v.draw(c);
         return bmp;
+    }
+
+    private void drawLowPoint(LineDataSet dataSetByIndex, Transformer trans, Paint paint, Canvas c) {
+        float[] minFloat = getMinFloat(dataSetByIndex.getValues());//根据数据集获取最低点
+        //通过trans得到最低点的屏幕位置
+        MPPointD minPoint = trans.getPixelForValues(minFloat[0], minFloat[1]);
+        float lowX = (float) minPoint.x;
+        float lowY = (float) minPoint.y;
+        paint.setColor(Color.parseColor("#1ab546"));
+        float rectLength = Utils.convertDpToPixel((minFloat[1] + "").length() * Utils.convertDpToPixel(1.7f));//矩形框长
+        //画横竖线
+        c.drawLine(lowX, lowY, lowX, lowY + vLength, paint);
+        if (lowX > mWidth - mWidth / 3) {//标识朝左
+            c.drawLine(lowX, lowY + vLength, lowX - hLength, lowY + vLength, paint);
+            //画矩形
+            c.drawRect(new Rect((int) (lowX - hLength - rectLength), (int) (lowY + vLength - rect), (int) (lowX - hLength), (int) (lowY + vLength + rect)), paint);
+            //写数字
+            paint.setColor(Color.WHITE);
+            c.drawText(minFloat[1] + "", lowX - rectLength - hLength + textX, lowY + vLength + textY, paint);
+        } else {//标识朝右
+            c.drawLine(lowX, lowY + vLength, lowX + hLength, lowY + vLength, paint);
+            c.drawRect(new Rect((int) (lowX + hLength), (int) (lowY + vLength - rect), (int) (lowX + hLength + rectLength), (int) (lowY + vLength + rect)), paint);
+            paint.setColor(Color.WHITE);
+            c.drawText(minFloat[1] + "", lowX + hLength + textX, lowY + vLength + textY, paint);
+        }
+    }
+
+    private float[] getMinFloat(List<Entry> lists) {
+        float[] mixEntry = new float[2];
+        for (int i = 0; i < lists.size() - 1; i++) {
+            if (i == 0) {
+                mixEntry[0] = lists.get(i).getX();
+                mixEntry[1] = lists.get(i).getY();
+            }
+            if (mixEntry[1] > lists.get(i + 1).getY()) {
+                mixEntry[0] = lists.get(i + 1).getX();
+                mixEntry[1] = lists.get(i + 1).getY();
+            }
+        }
+        return mixEntry;
     }
 }
