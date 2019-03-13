@@ -1,7 +1,7 @@
-# TestAcharView
+# TestAcharView（该demo为内部测试demo，多余功能请忽略）
 利用MpAndroidChart，实现多点的特殊标记（类似默认显示多个markview）
 
-最近在开发时遇到这样一种需求，为一些特殊点显示标签，类似默认显示多个markview。如下图（demo）：
+最近在开发时遇到这样一种需求，为一些特殊点显示标签，类似默认显示多个markview。如下图：
 
 ![](https://zhaoshuming.github.io/2019/03/12/mpchart-point-label/chart_label.png)
 在网上并没有相关资料，在此做下记录分享
